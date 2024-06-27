@@ -14,7 +14,7 @@ export const initMongoConnection = async () => {
     console.log(url);
     console.log(db);
 
-    const connectionString = `mongodb+srv://${user}:${pwd}@${url}/${db}`  
+    const connectionString = `mongodb+srv://${user}:${pwd}@${url}/${db}`;  
     console.log(connectionString);
 
     await mongoose.connect(connectionString, {
