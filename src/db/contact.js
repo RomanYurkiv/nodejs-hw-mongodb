@@ -6,17 +6,14 @@ const Contact = new Schema(
       type: String,
       required: [true, 'Set name for contact'],
     },
-
     phoneNumber: {
       type: String,
       required: [true, 'Set phone number for contact'],
     },
-
     email: {
       type: String,
       optional: true,
     },
-
     isFavorite: {
       type: Boolean,
       default: false,
@@ -29,6 +26,7 @@ const Contact = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   },
 );
 

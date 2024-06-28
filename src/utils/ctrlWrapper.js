@@ -3,3 +3,5 @@ export const ctrlWrapper = (ctrl) => {
       ctrl(req, res).catch((err) => next(err));
     };
   };
+
+  
