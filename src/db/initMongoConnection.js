@@ -10,10 +10,7 @@ export const initMongoConnection = async () => {
 
     const connectionString = `mongodb+srv://${user}:${pwd}@${url}/${db}`;
 
-    await mongoose.connect(connectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(connectionString);
 
     console.log('Mongo connection successfully established!');
   } catch (e) {
