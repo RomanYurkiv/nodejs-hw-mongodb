@@ -22,13 +22,11 @@ export const setupServer = () => {
     }),
   );
 
-  
-
   app.get('/', (req, res) => {
     res.send('Hello World!');
   });
 
-  app.use(contactsRouter);
+  app.use('/api', contactsRouter);
 
   app.use('*', notFoundHandler);
 

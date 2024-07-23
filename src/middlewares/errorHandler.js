@@ -3,11 +3,11 @@ import { HttpError } from 'http-errors';
 export const errorHandler = (err, req, res, next) => {
   console.log(err);
   if (err instanceof HttpError) {
-    console.log("ttttttttttttttttttttttttttttttttttttt");
+    console.log("HttpError detected");
     res.status(err.status).json({
       status: err.status,
-      message: err.name,
-      data: err,
+      message: err.message,
+      data: err.data || null,
     });
     return;
   }
