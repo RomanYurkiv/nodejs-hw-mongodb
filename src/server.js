@@ -26,7 +26,7 @@ export const setupServer = () => {
     res.send('Hello World!');
   });
 
-  app.use('/api', contactsRouter);
+  app.use('/', contactsRouter);
 
   app.use('*', notFoundHandler);
 
