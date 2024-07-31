@@ -6,14 +6,40 @@ import {
   updateContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getAllContactsController = async (req, res, next) => {
-  const contacts = await getAllContacts();
-  res.json({
-    status: 200,
-    message: 'Successfully found contacts!',
-    data: contacts,
-  });
+  try {
+    const { page, perPage } = parsePaginationParams(req.query);
+    const { sortBy, sortOrder } = parseSortParams(req.query);
+    const filters = parseFilterParams(req.query);
+
+    console.log('Filters:', filters);
+
+    const result = await getAllContacts({ page, perPage, sortBy, sortOrder, filters });
+
+    console.log('Result:', result);
+
+    res.json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data:  result, 
+      // {
+      //   data: result.data,
+      //   page: result.page,
+      //   perPage: result.perPage,
+      //   totalItems: result.totalItems,
+      //   totalPages: result.totalPages,
+      //   hasPreviousPage: result.hasPreviousPage,
+      //   hasNextPage: result.hasNextPage,
+      // },
+    });
+  } catch (error) {
+    console.log('Error');
+    next(error);
+  }
 };
 
 export const getContactByIdController = async (req, res, next) => {
@@ -82,3 +108,4 @@ export const patchContactController = async (req, res, next) => {
     data: result.contact.value,
   });
 };
+
