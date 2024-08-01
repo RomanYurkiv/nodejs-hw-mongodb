@@ -30,7 +30,7 @@
     "joi": "^17.13.3",
     "joi-phone-number": "^5.1.1",
     "mongodb": "^6.7.0",
-    "mongoose": "^8.4.3",
+    "mongoose": "^8.5.2",
     "pino-http": "^10.1.0"
   }
 }
