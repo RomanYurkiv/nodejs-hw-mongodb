@@ -1,7 +1,9 @@
 import Joi from 'joi';
 
+const namePattern = /^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$/;
+
 export const createContactsSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string().pattern(namePattern).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().pattern(/^\+\d{12}$/).required(),
   isFavourite: Joi.boolean().required(),
@@ -9,7 +11,7 @@ export const createContactsSchema = Joi.object({
 });
 
 export const updateContactsSchema = Joi.object({
-  name: Joi.string(),
+  name: Joi.string().pattern(namePattern),
   email: Joi.string().email(),
   phoneNumber: Joi.string().pattern(/^\+\d{12}$/),
   isFavourite: Joi.boolean(),
