@@ -25,16 +25,7 @@ export const getAllContactsController = async (req, res, next) => {
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data:  result, 
-      // {
-      //   data: result.data,
-      //   page: result.page,
-      //   perPage: result.perPage,
-      //   totalItems: result.totalItems,
-      //   totalPages: result.totalPages,
-      //   hasPreviousPage: result.hasPreviousPage,
-      //   hasNextPage: result.hasNextPage,
-      // },
+      data:  result,
     });
   } catch (error) {
     console.log('Error');
@@ -92,7 +83,7 @@ export const upsertContactController = async (req, res, next) => {
   res.status(status).json({
     status,
     message: `Successfully upserted contact with id ${contactId}!`,
-    data: result.contact,
+    data: result.contact.value,
   });
 };
 
