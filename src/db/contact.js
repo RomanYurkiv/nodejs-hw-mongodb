@@ -23,8 +23,10 @@ const Contact = new Schema(
       enum: ['work', 'personal', 'home'],
       default: 'personal',
     },
-    parentId: {  
-      type: Schema.Types.ObjectId, ref: 'users'  
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
     },
   },
   {

@@ -5,16 +5,15 @@ import { UsersCollection } from '../db/models/user.js';
 export const authenticate = async (req, res, next) => {
   const authHeader = req.get('Authorization');
 
-  console.log('Authorization Header:', authHeader);
-
   if (!authHeader) {
     return next(createHttpError(401, 'Please provide Authorization header'));
   }
 
-  const [bearer, token] = authHeader.split(' ');
+  const bearer = authHeader.split(' ')[0];
+  const token = authHeader.split(' ')[1];
 
   if (bearer !== 'Bearer' || !token) {
-    return next(createHttpError(401, 'Auth header should be of type Bearer'));
+    return next(createHttpError(401, 'Auth header should be of type Bearer'));  
   }
 
   const session = await SessionsCollection.findOne({ accessToken: token });
