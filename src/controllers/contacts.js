@@ -30,83 +30,93 @@ export const getAllContactsController = async (req, res, next) => {
 };
 
 const setAuthContactId = (req) => {
-  let authContactId = {};
   const { contactId } = req.params;
   const userId = req.user._id;
-  if (contactId) {
-    authContactId = { _id: contactId };
-  }
-  if (userId) {
-    authContactId = { ...authContactId, userId: userId };
-  }
-  return authContactId;
+
+  return { _id: contactId, userId: userId };
 };
 
 export const getContactByIdController = async (req, res, next) => {
-  const authContactId = setAuthContactId(req);
-  const contact = await getContactById(authContactId);
-  if (!contact) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+  try {
+    const authContactId = setAuthContactId(req);
+    const contact = await getContactById(authContactId);
+    if (!contact) {
+      next(createHttpError(404, 'Contact not found'));
+      return;
+    }
+    res.status(200).json({
+      status: 200,
+      message: `Successfully found contact with id ${req.params.contactId}!`,
+      data: contact,
+    });
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json({
-    status: 200,
-    message: `Successfully found contact with id ${req.params.contactId}!`, // Використання чистого contactId
-    data: contact,
-  });
 };
 
-export const createContactController = async (req, res) => {
-  const contact = await createContact({ userId: req.user._id, ...req.body });
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully created contact!',
-    data: contact,
-  });
+export const createContactController = async (req, res, next) => {
+  try {
+    const contact = await createContact({ userId: req.user._id, ...req.body });
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created contact!',
+      data: contact,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
-
 
 export const deleteContactController = async (req, res, next) => {
-  const authContactId = setAuthContactId(req);
+  try {
+    const authContactId = setAuthContactId(req);
 
-  const contact = await deleteContact(authContactId);
-  if (!contact) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+    const contact = await deleteContact(authContactId);
+    if (!contact) {
+      next(createHttpError(404, 'Contact not found'));
+      return;
+    }
+    res.status(204).send();
+  } catch (error) {
+    next(error);
   }
-  res.status(204).send();
 };
-
 
 export const upsertContactController = async (req, res, next) => {
-  const authContactId = setAuthContactId(req);
+  try {
+    const authContactId = setAuthContactId(req);
 
-  const result = await updateContact(authContactId, req.body, {
-    upsert: true,
-  });
-  if (!result) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+    const result = await updateContact(authContactId, req.body, {
+      upsert: true,
+    });
+    if (!result) {
+      next(createHttpError(404, 'Contact not found'));
+      return;
+    }
+    res.status(200).json({
+      status: 200,
+      message: `Successfully upserted contact with id ${req.params.contactId}!`,
+      data: result.contact.value,
+    });
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json({
-    status: 200,
-    message: `Successfully upserted contact with id ${authContactId}!`,
-    data: result.contact.value,
-  });
 };
-
 
 export const patchContactController = async (req, res, next) => {
-  const authContactId = setAuthContactId(req);
-  const result = await updateContact(authContactId, req.body);
-  if (!result) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+  try {
+    const authContactId = setAuthContactId(req);
+    const result = await updateContact(authContactId, req.body);
+    if (!result) {
+      next(createHttpError(404, 'Contact not found'));
+      return;
+    }
+    res.status(200).json({
+      status: 200,
+      message: `Successfully patched contact with id ${req.params.contactId}!`,
+      data: result.contact.value,
+    });
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json({
-    status: 200,
-    message: `Successfully patched contact with id ${authContactId}!`,
-    data: result.contact.value,
-  });
 };
-
