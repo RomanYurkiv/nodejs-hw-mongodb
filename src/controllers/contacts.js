@@ -9,6 +9,9 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
 
 export const getAllContactsController = async (req, res, next) => {
   try {
@@ -103,17 +106,51 @@ export const upsertContactController = async (req, res, next) => {
   }
 };
 
+// export const patchContactController = async (req, res, next) => {
+//   try {
+//     const authContactId = setAuthContactId(req);
+//     const result = await updateContact(authContactId, req.body);
+//     if (!result) {
+//       next(createHttpError(404, 'Contact not found'));
+//       return;
+//     }
+//     res.status(200).json({
+//       status: 200,
+//       message: `Successfully patched contact with id ${req.params.contactId}!`,
+//       data: result.contact.value,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const patchContactController = async (req, res, next) => {
   try {
     const authContactId = setAuthContactId(req);
-    const result = await updateContact(authContactId, req.body);
+    const photo = req.file;
+
+    let photoUrl;
+
+    if (photo) {
+      if (env('ENABLE_CLOUDINARY') === 'true') {
+        photoUrl = await saveFileToCloudinary(photo);
+      } else {
+        photoUrl = await saveFileToUploadDir(photo);
+      }
+    }
+    const result = await updateContact(authContactId, {
+      ...req.body,
+      photo: photoUrl,
+    });
+
     if (!result) {
       next(createHttpError(404, 'Contact not found'));
       return;
     }
+
     res.status(200).json({
       status: 200,
-      message: `Successfully patched contact with id ${req.params.contactId}!`,
+      message: `Successfully patched contact with id ${authContactId}!`,
       data: result.contact.value,
     });
   } catch (error) {

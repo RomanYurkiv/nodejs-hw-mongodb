@@ -18,12 +18,9 @@ export const createContactsSchema = Joi.object({
   isFavourite: Joi.boolean().required().messages({
     'any.required': `"isFavourite" is a required field`,
   }),
-  contactType: Joi.string().valid('personal', 'work').required().messages({
+  contactType: Joi.string().valid('personal', 'work', 'home').required().messages({
     'any.only': `"contactType" must be either 'personal' or 'work'`,
     'any.required': `"contactType" is a required field`,
-  }),
-  parentId: Joi.string().required().messages({
-    'any.required': `"parentId" is a required field`,
   }),
 });
 
@@ -38,10 +35,7 @@ export const updateContactsSchema = Joi.object({
     'string.pattern.base': `"phoneNumber" must be in the format +XXXXXXXXXXXX (12 digits)`,
   }),
   isFavourite: Joi.boolean(),
-  contactType: Joi.string().valid('personal', 'work').messages({
+  contactType: Joi.string().valid('personal', 'work', 'home').messages({
     'any.only': `"contactType" must be either 'personal' or 'work'`,
-  }),
-  parentId: Joi.string().required().messages({
-    'any.required': `"parentId" is a required field`,
   }),
 }).min(1);
