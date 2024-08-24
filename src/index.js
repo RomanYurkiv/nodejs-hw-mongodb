@@ -10,4 +10,4 @@ const bootstrap = async () => {
   await setupServer();
 };
 
-void bootstrap(); 
+void bootstrap();
